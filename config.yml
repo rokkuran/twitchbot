@@ -1,0 +1,4 @@
+HOST: irc.chat.twitch.tv
+PORT: 6667
+NICK: <nickname>
+PASS: <oath>
