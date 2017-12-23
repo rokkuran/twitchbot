@@ -1,4 +1,4 @@
-#twitchbot
+# twitchbot
 
 A base bot class that connects to an IRC channel with the following basic bot extensions:
 - harvester bot, which stores chat;
