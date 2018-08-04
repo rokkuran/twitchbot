@@ -19,7 +19,8 @@ class Bot(object):
         self._nickname = NICK
         self.channel = channel
         self.connect(channel)
-        print NICK, channel, '\n', '-' * (len(NICK + channel) + 1)
+        # print(NICK, channel, '\n', '-' * (len(NICK + channel) + 1))
+        print("{} {}\n{}".format(NICK, channel, '-' * (len(NICK + channel) + 1)))
 
         self._msg_count = 0
         self.n_msg_per_sec = n_msg_per_sec
@@ -46,7 +47,7 @@ class Bot(object):
         try:
             response = self._socket.recv(1024).decode("utf-8")
         except UnicodeDecodeError as e:
-            print '\n\n%s\n\n' % e
+            print('\n\n%s\n\n' % e)
             return False
 
         if self._ping_pong(response):

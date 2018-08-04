@@ -12,6 +12,7 @@ from nltk.corpus import stopwords
 from string import punctuation
 
 
+
 class CountBot(Bot):
     """"""
     def __init__(self, output_path=None, **kwargs):
@@ -19,6 +20,7 @@ class CountBot(Bot):
         self.output_path = output_path
         self.counts = Counter()
         self.recent = []
+
 
     def _update_counts(self, msg):
         tokens = word_tokenize(msg)
@@ -32,15 +34,16 @@ class CountBot(Bot):
         else:
             self.recent.extend(tokens)
 
-        if self._msg_count % 100 == 0:
+        if self._msg_count % 20 == 0:
             n_top = 10
             recent_counts = Counter(self.recent).most_common(n_top)
 
-            print '\nToken Counts @ msg_count=%s; n_keys=%s; n_counts=%s' \
-                % (self._msg_count, len(self.counts), sum(self.counts.values()))
+            print('\nToken Counts @ msg_count=%s; n_keys=%s; n_counts=%s' \
+                % (self._msg_count, len(self.counts), sum(self.counts.values())))
 
             for x, y in zip(self.counts.most_common(n_top), recent_counts):
-                print '%s | %s' % (x, y)
+                print('%s | %s' % (x, y))
+
 
     def action(self, username, msg):
         self._msg_count += 1

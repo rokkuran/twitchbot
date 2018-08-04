@@ -25,8 +25,8 @@ class Transition(object):
 
     @property
     def predict_next(self):
-        a = self.transitions.keys()
-        p = np.array(self.transitions.values()) / float(self.count)
+        a = list(self.transitions.keys())
+        p = np.array(list(self.transitions.values())) / float(self.count)
         return np.random.choice(a=a, size=1, p=p)[0]
 
 
@@ -43,7 +43,7 @@ class MarkovModel(object):
         if len(self.words) < self.order:
             return
 
-        for i in xrange(self.n_words - (self.order - 1)):
+        for i in range(self.n_words - (self.order - 1)):
             words = self.words[i:i + self.order]
             yield tuple(words)
 
@@ -63,7 +63,7 @@ class MarkovModel(object):
     def _generate(self, size):
         key = self._seed_key()
         words = list(key)
-        for _ in xrange(size - 1):
+        for _ in range(size - 1):
             v = self.cache[key].predict_next
             words.append(v)
             key = tuple(list(key)[1:] + [v])
@@ -77,25 +77,26 @@ class MarkovModel(object):
         return self._text_post_processing(words)
 
 
+def get_data(cursor):
+    attributes = ['slug', 'synopsis']
+    results = []
+    for i, x in enumerate(cursor):
+        results.append([x[k] for k in attributes])
+
+    df = pd.DataFrame(results, columns=attributes)
+    return df
+
+def test_anime_synopsis(n_synopsis, order):
+    client = MongoClient()
+    db = client.kitsu
+    cursor = db.anime.find()
+    df = get_data(cursor)
+    words = ' '.join([s for s in df.synopsis.values[-n_synopsis:]]).split()
+    hmm = MarkovModel(words, order=order)
+    return hmm
+
+
+
 if __name__ == '__main__':
-    def get_data(cursor):
-        attributes = ['slug', 'synopsis']
-        results = []
-        for i, x in enumerate(cursor):
-            print i, x['slug'], x['averageRating']
-            results.append([x[k] for k in attributes])
-
-        df = pd.DataFrame(results, columns=attributes)
-        return df
-
-    def test_anime_synopsis(n_synopsis, order):
-        client = MongoClient()
-        db = client.kitsu
-        cursor = db.anime.find()
-        df = get_data(cursor)
-        words = ' '.join([s for s in df.synopsis.values[-n_synopsis:]]).split()
-        hmm = MarkovModel(words, order=order)
-        return hmm
-
     hmm = test_anime_synopsis(n_synopsis=10000, order=4)
-    print hmm.generate_text(50)
+    print(hmm.generate_text(50))

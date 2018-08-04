@@ -22,19 +22,20 @@ class Harvester(Bot):
 
     def action(self, username, msg):
         if self.verbose:
-            print '%s: %s' % (username, msg)
+            print('%s: %s' % (username, msg))
 
         filepath = '{}/{}.csv'.format(self.output_path, self.channel)
-        with open(filepath, 'ab') as f:
+        with open(filepath, 'a', newline='') as f:
             writer = csv.writer(f)
             t = datetime.strftime(datetime.now(), '%Y-%m-%d %H:%M:%S')
             try:
                 writer.writerow([t, username, msg])
             except UnicodeEncodeError as e:
-                print '\n%s\n' % e
+                print('\n%s\n' % e)
 
 
 if __name__ == '__main__':
-    path = '/home/rokkuran/workspace/miscellaneous/twitch/output/'
+    # path = '/home/rokkuran/workspace/miscellaneous/twitch/output/'
+    path = 'c:/workspace/twitchbot/output/'
     harvester = Harvester(channel=CHAN, output_path=path)
     harvester.run()
