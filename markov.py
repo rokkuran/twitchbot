@@ -92,11 +92,11 @@ def test_anime_synopsis(n_synopsis, order):
     cursor = db.anime.find()
     df = get_data(cursor)
     words = ' '.join([s for s in df.synopsis.values[-n_synopsis:]]).split()
-    hmm = MarkovModel(words, order=order)
-    return hmm
+    mm = MarkovModel(words, order=order)
+    return mm
 
 
 
 if __name__ == '__main__':
-    hmm = test_anime_synopsis(n_synopsis=10000, order=4)
-    print(hmm.generate_text(50))
+    mm = test_anime_synopsis(n_synopsis=10000, order=4)
+    print(mm.generate_text(50))
